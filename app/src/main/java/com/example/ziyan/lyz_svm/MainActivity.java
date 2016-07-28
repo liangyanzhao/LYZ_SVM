@@ -30,6 +30,7 @@ import libsvm.svm_model;
 
 public class MainActivity extends AppCompatActivity {
     private static final int animTime = 2000;
+    private static final int sleepTime = 2000;
 
     public Button startButton;
     public TextView aText, resultText;
@@ -40,9 +41,42 @@ public class MainActivity extends AppCompatActivity {
     public int rangeID = R.raw.range;
     public int modelID = R.raw.model;
 
+    /*protected void onStart() {
+        super.onStart();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                threadSleep(sleepTime);
+                setContentView(R.layout.activity_main);
+
+                startButton = (Button)findViewById(R.id.start);
+                aText = (TextView)findViewById(R.id.A);
+                resultText = (TextView)findViewById(R.id.Result);
+
+                InputStream isRange = getResources().openRawResource(rangeID);
+                String[] rulArr= SvmUtil.myReadFileToArr(isRange);
+                InputStream isModel = getResources().openRawResource(modelID);
+                BufferedReader brModel = new BufferedReader(new InputStreamReader(isModel));
+                // 读取SVM模型
+                try {
+                    svm_model svmModel = svm.svm_load_model(brModel);
+                    svmTest = new MySVM(rulArr, svmModel);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+/*        final View view = View.inflate(
+                this, R.layout.activity_splash, null);
+        setContentView(view);
+        AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
+        animation.setDuration(animTime);
+        view.startAnimation(animation);*/
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
@@ -56,20 +90,12 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        };
 //        timer.schedule(task, animTime);
+    }
 
-        startButton = (Button)findViewById(R.id.start);
-        aText = (TextView)findViewById(R.id.A);
-        resultText = (TextView)findViewById(R.id.Result);
-
-        InputStream isRange = getResources().openRawResource(rangeID);
-        String[] rulArr= SvmUtil.myReadFileToArr(isRange);
-        InputStream isModel = getResources().openRawResource(modelID);
-        BufferedReader brModel = new BufferedReader(new InputStreamReader(isModel));
-        // 读取SVM模型
+    public void threadSleep(long timeout) {
         try {
-            svm_model svmModel = svm.svm_load_model(brModel);
-            svmTest = new MySVM(rulArr, svmModel);
-        } catch (IOException e) {
+            Thread.sleep(timeout);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
