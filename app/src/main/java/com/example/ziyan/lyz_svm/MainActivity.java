@@ -80,6 +80,22 @@ public class MainActivity extends AppCompatActivity {
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        startButton = (Button)findViewById(R.id.start);
+        aText = (TextView)findViewById(R.id.A);
+        resultText = (TextView)findViewById(R.id.Result);
+
+        InputStream isRange = getResources().openRawResource(rangeID);
+        String[] rulArr= SvmUtil.myReadFileToArr(isRange);
+        InputStream isModel = getResources().openRawResource(modelID);
+        BufferedReader brModel = new BufferedReader(new InputStreamReader(isModel));
+        // 读取SVM模型
+        try {
+            svm_model svmModel = svm.svm_load_model(brModel);
+            svmTest = new MySVM(rulArr, svmModel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 //        final Intent intent = new Intent();
 //        Timer timer = new Timer();
 //        TimerTask task = new TimerTask() {
